@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBLX6900</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #00A2E8 0%, #000000 50%, #58CC02 100%);
+            background-size: 200% 200%;
+            animation: subtleBg 8s ease-in-out infinite;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        @keyframes subtleBg {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Flash overlay */
+        #flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(88,204,2,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header section with banner */
+        .header {
+            background: url('rblx6900banner.png') center/contain no-repeat;
+            background-color: rgba(0,0,0,0.8);
+            height: 250px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid #58CC02;
+            box-shadow: 0 0 20px rgba(88,204,2,0.4);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #58CC02, #00A2E8);
+            color: white;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(88,204,2,0.3);
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(45deg, #00A2E8, #58CC02);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,162,232,0.5);
+        }
+
+        /* Stock ticker */
+        .stock-ticker {
+            background: linear-gradient(90deg, #000000, #1a1a1a, #000000);
+            color: white;
+            padding: 12px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            border-top: 2px solid #58CC02;
+            border-bottom: 2px solid #58CC02;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: scroll-left 30s linear infinite;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .green { 
+            color: #58CC02; 
+            text-shadow: 0 0 8px #58CC02;
+        }
+        
+        .red { 
+            color: #ff4444; 
+            text-shadow: 0 0 8px #ff4444;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translate3d(100%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* Main content area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            padding: 40px;
+            min-height: 80vh;
+        }
+
+        /* Left section - Information Card */
+        .left-section {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(88,204,2,0.05));
+            color: black;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            height: fit-content;
+            animation: gentleFloat 4s ease-in-out infinite;
+            border: 3px solid #58CC02;
+            box-shadow: 0 0 25px rgba(88,204,2,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(88,204,2,0.1), transparent);
+            animation: cardShine 6s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes cardShine {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #333;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .rarity-badge {
+            background: linear-gradient(45deg, #00A2E8, #58CC02);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,162,232,0.4);
+        }
+
+        .roblox-icon {
+            width: 160px;
+            height: 160px;
+            background: url('icon.jpg') center/cover;
+            border-radius: 15px;
+            margin: 20px auto;
+            border: 4px solid #58CC02;
+            animation: iconSpin 4s linear infinite, iconGlow 2s ease-in-out infinite alternate;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(88,204,2,0.4);
+        }
+
+        .roblox-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 15px;
+            padding: 4px;
+            background: linear-gradient(45deg, #58CC02, #00A2E8, #58CC02);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes iconSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes iconGlow {
+            from { box-shadow: 0 0 20px rgba(88,204,2,0.4); }
+            to { box-shadow: 0 0 30px rgba(88,204,2,0.8); }
+        }
+
+        @keyframes borderRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-stats {
+            text-align: left;
+            margin: 25px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(88,204,2,0.2);
+        }
+
+        .stat-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .buy-button {
+            background: linear-gradient(45deg, #58CC02, #00A2E8);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(88,204,2,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .buy-button:hover {
+            background: linear-gradient(45deg, #00A2E8, #58CC02);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,162,232,0.4);
+        }
+
+        /* Center section - Articles */
+        .center-section {
+            background: rgba(255,255,255,0.95);
+            color: black;
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #58CC02;
+            box-shadow: 0 0 20px rgba(88,204,2,0.2);
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #58CC02, #00A2E8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Grid layout for articles */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .article {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #58CC02;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            animation: slideInUp 0.6s ease-out;
+            height: fit-content;
+        }
+
+        .article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(88,204,2,0.2);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .article p {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(88,204,2,0.1), rgba(0,162,232,0.1));
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #58CC02;
+            margin: 12px 0;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Floating Items */
+        .floating-items {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-item {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-size: cover;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite, rotate 6s linear infinite;
+            cursor: pointer;
+            pointer-events: all;
+            transition: all 0.3s;
+            border: 3px solid rgba(88,204,2,0.6);
+            box-shadow: 0 0 15px rgba(88,204,2,0.3);
+        }
+
+        .floating-item:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(88,204,2,0.6);
+        }
+
+        .astra { 
+            background-image: url('astra.jpg'); 
+            top: 15%; 
+            left: 10%; 
+            animation-delay: 0s; 
+        }
+        .dominus { 
+            background-image: url('dominus.jpg'); 
+            top: 25%; 
+            right: 15%; 
+            animation-delay: -2s; 
+        }
+        .duke { 
+            background-image: url('duke.jpg'); 
+            top: 45%; 
+            left: 5%; 
+            animation-delay: -4s; 
+        }
+        .empyrus { 
+            background-image: url('empyrus.jpg'); 
+            top: 65%; 
+            right: 10%; 
+            animation-delay: -6s; 
+        }
+        .federation { 
+            background-image: url('federation.jpg'); 
+            top: 80%; 
+            left: 20%; 
+            animation-delay: -1s; 
+        }
+        .staff { 
+            background-image: url('staff.jpg'); 
+            top: 35%; 
+            right: 25%; 
+            animation-delay: -3s; 
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-15px) translateX(10px); }
+            50% { transform: translateY(-10px) translateX(-5px); }
+            75% { transform: translateY(-20px) translateX(15px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Robloxian Character */
+        .robloxian {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            background: url('robloxian.jpg') center/cover;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: bounce 3s ease-in-out infinite;
+            border: 4px solid #58CC02;
+            box-shadow: 0 0 20px rgba(88,204,2,0.4);
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .robloxian:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(88,204,2,0.6);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Seamless Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(26,26,26,0.9));
+            color: white;
+            padding: 25px 40px;
+            border-top: 2px solid #58CC02;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .footer h3 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #58CC02, #00A2E8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            line-height: 1.4;
+            color: #ccc;
+        }
+
+        .disclaimer-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #58CC02;
+        }
+
+        .disclaimer p {
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .articles-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .floating-item {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .robloxian {
+                width: 60px;
+                height: 60px;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash overlay -->
+    <div id="flash"></div>
+
+    <!-- Floating Items -->
+    <div class="floating-items">
+        <div class="floating-item astra" onclick="itemClick(this)"></div>
+        <div class="floating-item dominus" onclick="itemClick(this)"></div>
+        <div class="floating-item duke" onclick="itemClick(this)"></div>
+        <div class="floating-item empyrus" onclick="itemClick(this)"></div>
+        <div class="floating-item federation" onclick="itemClick(this)"></div>
+        <div class="floating-item staff" onclick="itemClick(this)"></div>
+    </div>
+
+    <!-- Robloxian Character -->
+    <div class="robloxian" onclick="robloxianClick()"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="nav-links">
+            <a href="https://dexscreener.com/solana/6eJqMv1uJxruwxLBgNK8KVScQgq8oEqPTxPMXXvdB5u6" target="_blank">Chart</a>
+            <a href="https://jup.ag/swap/SOL-6eJqMv1uJxruwxLBgNK8KVScQgq8oEqPTxPMXXvdB5u6" target="_blank">Swap</a>
+            <a href="https://x.com/RBLX6900" target="_blank">X/Twitter</a>
+        </div>
+    </div>
+
+    <!-- Stock Ticker -->
+    <div class="stock-ticker">
+        <div class="ticker-content">
+            <span class="green">HOUSING MARKET +2.1%</span> • <span class="red">AAPL -9999%</span> • <span class="red">TSLA -9999%</span> • <span class="green">RBLX6900 +6900%</span> • <span class="red">META -9999%</span> • <span class="red">GOOGL -9999%</span> • <span class="green">RBLX +79% YTD</span> • <span class="red">NVDA -9999%</span> • <span class="green">RBLX6900 BULLISH</span> • <span class="red">AMZN -9999%</span> • <span class="red">MSFT -9999%</span> • <span class="red">EVERY OTHER STOCK -9999%</span> • <span class="green">RBLX6900 ONLY GREEN</span> • <span class="red">SPY -9999%</span> • <span class="red">QQQ -9999%</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left section - Information Card -->
+        <div class="left-section">
+            <div class="rarity-badge">Legendary</div>
+            <div class="card-title">RBLX6900</div>
+            <div class="roblox-icon" onclick="clickBlock()"></div>
+            
+            <div class="card-stats">
+                <div class="stat-row">
+                    <span class="stat-label">Market Cap:</span>
+                    <span class="stat-value">$72B</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Daily Users:</span>
+                    <span class="stat-value">97.8M</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">YTD Gain:</span>
+                    <span class="stat-value">+79%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Rarity:</span>
+                    <span class="stat-value">Ultra Rare</span>
+                </div>
+            </div>
+            
+            <a href="https://jup.ag/swap/SOL-6eJqMv1uJxruwxLBgNK8KVScQgq8oEqPTxPMXXvdB5u6" class="buy-button" target="_blank">Buy Now</a>
+        </div>
+
+        <!-- Center section - Real Articles -->
+        <div class="center-section">
+            <div class="section-title">Roblox Market Analysis</div>
+            
+            <div class="articles-grid">
+                <article class="article">
+                    <h3>Jim Cramer Says "Roblox Goes Higher"</h3>
+                    <div class="article-meta">Yahoo Finance • 1 day ago</div>
+                    <p>Roblox Corporation (NYSE:RBLX) is one of the <strong>12 stocks on Jim Cramer's radar recently</strong>. A caller asked for Cramer's thoughts on the company, and he said:</p>
+                    
+                    <div class="highlight">
+                        "Roblox goes higher. Dave Baszucki, it turns out to be the real deal, and I know that some people were concerned that they weren't doing the right thing, ethically. I see it. I think Baszucki, ethical man, ethical product. People really like it."
+                    </div>
+                    
+                    <p>On June 5, parsing the "new high" list, Cramer remarked: "The game of Roblox is something that fascinates kids. It may be too much for all I know, but the point is it's insanely popular. It's done nothing but go up ever since it was attacked by short sellers."</p>
+                </article>
+
+                <article class="article">
+                    <h3>Oppenheimer Hikes Roblox Price Target Amid Strong Growth</h3>
+                    <div class="article-meta">Yahoo Finance • 2 days ago</div>
+                    <p>Oppenheimer has raised its price target for Roblox Corporation (NYSE: RBLX) to <strong>$160 from $140</strong>, maintaining an Outperform rating. The upgrade comes as the gaming platform continues to show <strong>robust user growth and engagement metrics</strong>.</p>
+                    
+                    <div class="highlight">
+                        The analyst cited Roblox's expanding global footprint and successful monetization strategies as key drivers for the increased target. Q1 2025 bookings grew <strong>31% year-over-year</strong> with record engagement.
+                    </div>
+                    
+                    <p>The platform's unique user-generated content model continues to attract both creators and players, with daily active users reaching <strong>97.8 million globally</strong>. International expansion remains a key growth driver for the company.</p>
+                </article>
+
+                <article class="article">
+                    <h3>Wells Fargo Boosts Roblox Target Price Amid Positive Outlook</h3>
+                    <div class="article-meta">GuruFocus • 3 days ago</div>
+                    <p>Wells Fargo has increased its price target for Roblox to <strong>$145 from $125</strong>, citing the company's strong fundamental performance and positive long-term growth prospects in the metaverse space.</p>
+                    
+                    <p>The bank highlighted Roblox's improved monetization per user and expanding developer ecosystem as key factors supporting the higher valuation. The platform's <strong>AI-powered tools</strong> are enhancing creator productivity and user engagement.</p>
+                    
+                    <div class="highlight">
+                        Roblox's path to consistent profitability looks increasingly clear, with adjusted EBITDA expected to reach <strong>$205-265 million</strong> in 2025, up from $180 million in 2024.
+                    </div>
+                </article>
+
+                <article class="article">
+                    <h3>Why I'm Getting More Bullish on Roblox Stock</h3>
+                    <div class="article-meta">Nasdaq • 4 days ago</div>
+                    <p>Roblox Corporation has demonstrated remarkable resilience and growth potential that makes it an increasingly attractive investment opportunity. The company's <strong>virtual economy</strong> continues to mature and generate substantial revenue.</p>
+                    
+                    <p>Key bullish factors include the platform's expanding global reach, with <strong>37% of daily active users</strong> now coming from outside North America, and strategic partnerships with major brands creating new revenue streams.</p>
+                    
+                    <div class="highlight">
+                        The integration of AI tools has resulted in a <strong>40% increase in creator productivity</strong>, while new advertising partnerships could generate over <strong>$500 million</strong> in additional revenue by 2026.
+                    </div>
+                </article>
+
+                <article class="article">
+                    <h3>Roblox Laps Stock Market Gains with 79% YTD Surge</h3>
+                    <div class="article-meta">Yahoo Finance • 5 days ago</div>
+                    <p>Roblox Corporation (RBLX) has emerged as one of 2025's top-performing stocks, with shares surging <strong>79% year-to-date</strong> as the gaming platform continues to exceed investor expectations.</p>
+                    
+                    <div class="highlight">
+                        The stock's impressive performance has been driven by strong quarterly results, including a <strong>31% increase in bookings</strong> and record user engagement across the platform's virtual experiences.
+                    </div>
+                    
+                    <p>Institutional investors are taking notice, with several major investment firms adding RBLX to their portfolios. The company's transition from a gaming platform to a comprehensive metaverse ecosystem continues to attract both users and investors.</p>
+                </article>
+
+                <article class="article">
+                    <h3>Roblox's 'Grow Garden' Explodes in Online Popularity</h3>
+                    <div class="article-meta">Yahoo Finance • 6 days ago</div>
+                    <p>A new user-generated experience on Roblox called "Grow Garden" has become a viral sensation, attracting millions of players and demonstrating the platform's continued ability to generate cultural phenomena.</p>
+                    
+                    <p>The game's success highlights Roblox's unique position in the gaming industry, where <strong>user creativity drives platform value</strong>. This organic content creation model continues to differentiate Roblox from traditional game developers.</p>
+                    
+                    <div class="highlight">
+                        Such viral experiences showcase the platform's potential for exponential growth and user engagement, supporting the bullish investment thesis for RBLX stock.
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <h3>RBLX6900</h3>
+            <div class="disclaimer">
+                <div class="disclaimer-title">Important Disclaimer</div>
+                <p><strong>RBLX6900 Token has no affiliation, association, or connection with Roblox Corporation.</strong> This token is a meme cryptocurrency created purely for entertainment purposes and holds no association with any official Roblox brand, franchise, company, game, media, or intellectual property owned by Roblox Corporation. Any resemblance to or association with the "Roblox" brand or related imagery is purely coincidental, satirical, or parody-based. This website is unofficial and operates solely as a fan page dedicated to RBLX6900. It is not endorsed, sponsored, or affiliated with any official Roblox-related entities or organizations. RBLX6900 is a meme token with no intrinsic value or expectation of financial gain. All information presented is for entertainment purposes only and should not be used to make investment decisions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Subtle click effect
+        function clickBlock() {
+            const flash = document.getElementById('flash');
+            flash.style.opacity = '1';
+            setTimeout(() => flash.style.opacity = '0', 300);
+        }
+
+        // Gentle item click effects
+        function itemClick(item) {
+            clickBlock();
+            item.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                item.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Robloxian click
+        function robloxianClick() {
+            clickBlock();
+            const robloxian = document.querySelector('.robloxian');
+            robloxian.style.transform = 'scale(1.2) rotate(10deg)';
+            setTimeout(() => {
+                robloxian.style.transform = 'scale(1) rotate(0deg)';
+            }, 300);
+        }
+
+        // Much less frequent flashes
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                clickBlock();
+            }
+        }, 5000);
+
+        // Add click effects to interactive elements
+        document.querySelectorAll('.nav-links a, .buy-button').forEach(btn => {
+            btn.addEventListener('click', clickBlock);
+        });
+
+        // Stagger article animations
+        document.querySelectorAll('.article').forEach((article, index) => {
+            article.style.animationDelay = `${index * 0.1}s`;
+        });
+    </script>
+</body>
+</html> 
