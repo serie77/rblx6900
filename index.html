@@ -288,6 +288,82 @@
             box-shadow: 0 6px 20px rgba(0,162,232,0.4);
         }
 
+        /* Contract Address Section */
+        .ca-section {
+            background: rgba(255,255,255,0.95);
+            color: black;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 2px solid #58CC02;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ca-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            text-align: center;
+        }
+
+        .ca-container {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+        }
+
+        .ca-text {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            word-break: break-all;
+            line-height: 1.4;
+            margin-right: 10px;
+        }
+
+        .copy-button {
+            background: linear-gradient(45deg, #58CC02, #00A2E8);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 50px;
+        }
+
+        .copy-button:hover {
+            background: linear-gradient(45deg, #00A2E8, #58CC02);
+            transform: scale(1.05);
+        }
+
+        .copy-button:active {
+            transform: scale(0.95);
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            background: #58CC02;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
         /* Center section - Articles */
         .center-section {
             background: rgba(255,255,255,0.95);
@@ -626,6 +702,16 @@
             </div>
             
             <a href="https://jup.ag/swap/SOL-6eJqMv1uJxruwxLBgNK8KVScQgq8oEqPTxPMXXvdB5u6" class="buy-button" target="_blank">Buy Now</a>
+            
+            <!-- Contract Address Section -->
+            <div class="ca-section">
+                <div class="ca-title">Contract Address</div>
+                <div class="ca-container">
+                    <div class="ca-text" id="contractAddress">6eJqMv1uJxruwxLBgNK8KVScQgq8oEqPTxPMXXvdB5u6</div>
+                    <button class="copy-button" onclick="copyCA()">Copy</button>
+                    <div class="copy-feedback" id="copyFeedback">Copied!</div>
+                </div>
+            </div>
         </div>
 
         <!-- Center section - Real Articles -->
@@ -762,6 +848,32 @@
         document.querySelectorAll('.article').forEach((article, index) => {
             article.style.animationDelay = `${index * 0.1}s`;
         });
+
+        // Copy contract address function
+        function copyCA() {
+            const contractText = document.getElementById('contractAddress').textContent;
+            const feedback = document.getElementById('copyFeedback');
+            
+            navigator.clipboard.writeText(contractText).then(() => {
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = contractText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html> 
